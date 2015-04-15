@@ -1,4 +1,5 @@
 @ECHO OFF
+SETLOCAL ENABLEDELAYEDEXPANSION
 CLS
 
 :: (c) = ¸
@@ -9,10 +10,25 @@ CLS
 :: Ä = Ž
 :: Ö = ™
 
+:: Exempel på iterering
+::SET variabel=(value1 value2 value3 value4)
+::FOR %%i IN %variabel% DO ECHO Val: %1%
+
+:: Källa för snippets: http://www.dostips.com/, stränghantering "DOS - String Operations", ":trimSpaces", ":trimSpaces2", "Split String"
+
+
+:: Wish List
+::  * 
+
+
 :: Starta och stoppa Windows tjänster för Oracle-instans,
 :: webb-konsollen och MapGuide Open Source.
 :: Metadata
-SET v=1.3.2 [2013-10-03]
+SET v=1.4 [2013-11-03]
+::  Flervals-alternativ av menyvalen
+::SET v=1.3.2 [2013-10-03]
+::  Indikering av aktiv windows-tjänst på huvudmeny
+::  Menyval för status av windows-tjänst
 ::SET v=1.3 [2013-10-02]
 ::SET v=1.2 [2013-04-08]
 ::SET v=1.1 [2013-03-29]
@@ -101,18 +117,32 @@ ECHO   x. Avsluta
 ECHO.
 ECHO.
 ECHO [*] = aktivt alternativ
+ECHO (flerval genom avgr„nsad lista av mellanslag)
+ECHO.
 
 SET /P menu=V„lj alternativ: 
-IF %menu%==1 GOTO ONE
-IF %menu%==2 GOTO TWO
-IF %menu%==3 GOTO THREE
-IF %menu%==4 GOTO FOUR
-IF %menu%==5 GOTO FIVE
-IF %menu%==6 GOTO SIX
-IF %menu%==7 GOTO MENUSTATUS
-IF %menu%==q GOTO SQL
-IF %menu%==m GOTO MENU
-IF %menu%==x GOTO END
+
+CALL :parse "%menu%"
+GOTO :eos
+:parse
+SET list=%1
+SET list=%list:"=%
+FOR /f "tokens=1* delims= " %%a IN ("%list%") DO (
+    SET func=
+    IF "%%a"=="1" SET func=ONE
+    IF "%%a"=="2" SET func=TWO
+    IF "%%a"=="3" SET func=THREE
+    IF "%%a"=="4" SET func=FOUR
+    IF "%%a"=="5" SET func=FIVE
+    IF "%%a"=="6" SET func=SIX
+    IF "%%a"=="7" SET func=MENUSTATUS
+    IF "%%a"=="q" SET func=SQL
+    IF "%%a"=="m" SET func=MENU
+    IF "%%a"=="x" SET func=END
+    IF NOT "%%a" == "" CALL :!func! %%a
+    IF NOT "%%b" == "" CALL :parse "%%b"
+)
+GOTO :MENU
 
 
 :MENUSTATUS
@@ -271,7 +301,8 @@ ECHO.
 PAUSE
 SET run1=%ON%
 SET run2=%OFF%
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :: NET STOP
@@ -296,7 +327,8 @@ ECHO.
 PAUSE
 SET run1=%OFF%
 SET run2=%ON%
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :THREE
@@ -312,7 +344,8 @@ PAUSE
 SET run3=%ON%
 SET consoleUrl= (https://localhost:1158/em)
 SET run4=%OFF%
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :FOUR
@@ -328,7 +361,8 @@ PAUSE
 SET run3=%OFF%
 SET consoleUrl=
 SET run4=%ON%
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :FIVE
@@ -343,7 +377,8 @@ ECHO.
 PAUSE
 SET run5=%ON%
 SET run6=%OFF%
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :SIX
@@ -358,7 +393,8 @@ ECHO.
 PAUSE
 SET run5=%OFF%
 SET run6=%ON%
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :SQL
@@ -370,8 +406,13 @@ CALL sqlplus %sqluser%/%sqlpass%
 ECHO %ERRORLEVEL%
 ECHO.
 PAUSE
-GOTO MENU
+::GOTO MENU
+GOTO :EOF
 
 
 :END
+ENDLOCAL
 EXIT
+
+
+:EOF
