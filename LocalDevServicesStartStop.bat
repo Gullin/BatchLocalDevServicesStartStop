@@ -2,42 +2,42 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 CLS
 
-:: (c) = ¸
-:: å = †
-:: ä = „
-:: ö = ”
-:: Å = 
-:: Ä = Ž
-:: Ö = ™
+:: (c) = ?
+:: ? = ?
+:: ? = ?
+:: ? = ?
+:: ? = ?
+:: ? = ?
+:: ? = ?
 
-:: Exempel på iterering
+:: Exempel p? iterering
 ::SET variabel=(value1 value2 value3 value4)
 ::FOR %%i IN %variabel% DO ECHO Val: %1%
 
-:: Källa för snippets: http://www.dostips.com/, stränghantering "DOS - String Operations", ":trimSpaces", ":trimSpaces2", "Split String"
+:: K?lla f?r snippets: http://www.dostips.com/, str?nghantering "DOS - String Operations", ":trimSpaces", ":trimSpaces2", "Split String"
 
 
 :: Wish List
 ::  * 
 
 
-:: Starta och stoppa Windows tjänster för Oracle-instans,
+:: Starta och stoppa Windows tj?nster f?r Oracle-instans,
 :: webb-konsollen och MapGuide Open Source.
 :: Metadata
 SET v=1.4 [2013-11-03]
 ::  Flervals-alternativ av menyvalen
 ::SET v=1.3.2 [2013-10-03]
-::  Indikering av aktiv windows-tjänst på huvudmeny
-::  Menyval för status av windows-tjänst
+::  Indikering av aktiv windows-tj?nst p? huvudmeny
+::  Menyval f?r status av windows-tj?nst
 ::SET v=1.3 [2013-10-02]
 ::SET v=1.2 [2013-04-08]
 ::SET v=1.1 [2013-03-29]
-:: Indikerar menyalternativ som är aktivt
+:: Indikerar menyalternativ som ?r aktivt
 SET ON=[*] 
 SET OFF=    
 :: Instans
 SET db=ADEV
-:: Tjänster som hanteras
+:: Tj?nster som hanteras
 SET wsTnslistener=OracleOraDb11g_home1TNSListener
 SET wsOraDB=OracleServiceADEV
 SET wsOraWebConsole=OracleDBConsoleadev
@@ -46,17 +46,17 @@ SET wsMapGuide=MapGuide Server 2.5
 TITLE Start/stop Developing Windows Services (v %v%)
 
 
-:: Kontrollerar om batch-filen körs som administratör. Ett krav då funktionerna annars inte fungerar.
+:: Kontrollerar om batch-filen k?rs som administrat?r. Ett krav d? funktionerna annars inte fungerar.
 :CHECK_PERMISSIONS
 ECHO.
-ECHO Administrat”rsr„ttigheter beh”vs. Kontrollerar r„ttigheter...
+ECHO Administrat?rsr?ttigheter beh?vs. Kontrollerar r?ttigheter...
 NET SESSION >NUL 2>&1
     IF %ERRORLEVEL% == 0 (
         GOTO START
     ) ELSE (
         ECHO.
-        ECHO Fel: Aktuella beh”righeter otillr„cklig.
-        ECHO      Batch-filen beh”ver k”ras som administrat”r.
+        ECHO Fel: Aktuella beh?righeter otillr?cklig.
+        ECHO      Batch-filen beh?ver k?ras som administrat?r.
     )
 
     pause >NUL
@@ -65,20 +65,20 @@ NET SESSION >NUL 2>&1
 :START
 CLS
 ECHO.
-ECHO  F”ljande tj„nster hanteras:
-ECHO    f”r Oracle-instans %db%
+ECHO  F?ljande tj?nster hanteras:
+ECHO    f?r Oracle-instans %db%
 ECHO      * %wsTnslistener%
 ECHO      * %wsOraDB%
 ECHO      * %wsOraWebConsole%
 ECHO.
-ECHO    ”vriga
+ECHO    ?vriga
 ECHO      * %wsMapGuide%
 ECHO.
-ECHO  F”r att forts„tta
+ECHO  F?r att forts?tta
 ECHO.
 PAUSE
 
-:: Kontrollera status för Windows-tjänsterna och sätt menymarkering
+:: Kontrollera status f?r Windows-tj?nsterna och s?tt menymarkering
 :MENU
 SET caller=STARTSTATUSTNS
 GOTO STATUSTNS
@@ -97,8 +97,8 @@ SET INFO=
     
 CLS
 ECHO.
-ECHO   1. %run1%Starta Oracle f”r instans %db%
-ECHO   2. %run2%Stoppa Oracle f”r instans %db%
+ECHO   1. %run1%Starta Oracle f?r instans %db%
+ECHO   2. %run2%Stoppa Oracle f?r instans %db%
 ECHO.
 ECHO   3. %run3%Starta Oracle's webbaserad kontrollpanel%consoleUrl%
 ECHO   4. %run4%Stoppa Oracle's webbaserad kontrollpanel
@@ -107,7 +107,7 @@ ECHO   5. %run5%Starta MapGuide Open Source
 ECHO   6. %run6%Stoppa MapGuide Open Source
 ECHO.
 ECHO.
-ECHO   7. Status Windows-tj„nster...
+ECHO   7. Status Windows-tj?nster...
 ECHO.
 ECHO.
 ECHO   q. SQL Plus
@@ -117,10 +117,10 @@ ECHO   x. Avsluta
 ECHO.
 ECHO.
 ECHO [*] = aktivt alternativ
-ECHO (flerval genom avgr„nsad lista av mellanslag)
+ECHO (flerval genom avgr?nsad lista av mellanslag)
 ECHO.
 
-SET /P menu=V„lj alternativ: 
+SET /P menu=V?lj alternativ: 
 
 CALL :parse "%menu%"
 GOTO :eos
@@ -171,7 +171,7 @@ ECHO   x. Avsluta
 ECHO.
 ECHO.
 
-SET /P menustatus=V„lj alternativ: 
+SET /P menustatus=V?lj alternativ: 
 SET caller=MENUSTATUS
 IF %menustatus%==1 GOTO STATUSTNS
 IF %menustatus%==2 GOTO STATUSDB
@@ -188,12 +188,12 @@ CLS
 ECHO.
 NET START | FINDSTR /C:"%wsTnslistener%" > nul
    IF NOT %ERRORLEVEL% == 1 (
-	  SET INFO=%wsTnslistener%    Status: k”r
+	  SET INFO=%wsTnslistener%    Status: k?r
 	  SET run1=%ON%
 	  SET run2=%OFF%
    )
    IF %ERRORLEVEL% == 1 (
-	  SET INFO=%wsTnslistener%    Status: k”r ej
+	  SET INFO=%wsTnslistener%    Status: k?r ej
 	  SET run1=%OFF%
 	  SET run2=%ON%
    )
@@ -207,12 +207,12 @@ CLS
 ECHO.
 NET START | FINDSTR /C:"%wsOraDB%" > nul
    IF NOT %ERRORLEVEL% == 1 (
-	  SET INFO=%wsOraDB%    Status: k”r
+	  SET INFO=%wsOraDB%    Status: k?r
 	  SET run1=%ON%
 	  SET run2=%OFF%
    )
    IF %ERRORLEVEL% == 1 (
-	  SET INFO=%wsOraDB%    Status: k”r ej
+	  SET INFO=%wsOraDB%    Status: k?r ej
 	  SET run1=%OFF%
 	  SET run2=%ON%
    )
@@ -226,12 +226,12 @@ CLS
 ECHO.
 NET START | FINDSTR /C:"%wsOraWebConsole%" > nul
    IF NOT %ERRORLEVEL% == 1 (
-	  SET INFO=%wsOraWebConsole%    Status: k”r
+	  SET INFO=%wsOraWebConsole%    Status: k?r
 	  SET run3=%ON%
 	  SET run4=%OFF%
    )
    IF %ERRORLEVEL% == 1 (
-	  SET INFO=%wsOraWebConsole%    Status: k”r ej
+	  SET INFO=%wsOraWebConsole%    Status: k?r ej
 	  SET run3=%OFF%
 	  SET run4=%ON%
    )
@@ -245,12 +245,12 @@ CLS
 ECHO.
 NET START | FINDSTR /C:"%wsMapGuide%" > nul
    IF NOT %ERRORLEVEL% == 1 (
-	  SET INFO=%wsMapGuide%    Status: k”r
+	  SET INFO=%wsMapGuide%    Status: k?r
 	  SET run5=%ON%
 	  SET run6=%OFF%
    )
    IF %ERRORLEVEL% == 1 (
-	  SET INFO=%wsMapGuide%    Status: k”r ej
+	  SET INFO=%wsMapGuide%    Status: k?r ej
 	  SET run5=%OFF%
 	  SET run6=%ON%
    )
@@ -263,17 +263,17 @@ GOTO %caller%
 CLS
 ECHO.
 NET START | FINDSTR /C:"%wsTnslistener%" > nul
-   IF NOT %ERRORLEVEL% == 1 ECHO  %wsTnslistener%    Status: k”r
-   IF %ERRORLEVEL% == 1 ECHO  %wsTnslistener%    Status: k”r ej
+   IF NOT %ERRORLEVEL% == 1 ECHO  %wsTnslistener%    Status: k?r
+   IF %ERRORLEVEL% == 1 ECHO  %wsTnslistener%    Status: k?r ej
 NET START | FINDSTR /C:"%wsOraDB%" > nul
-   IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  Status: k”r
-   IF %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  Status: k”r ej
+   IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  Status: k?r
+   IF %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  Status: k?r ej
 NET START | FINDSTR /C:"%wsOraWebConsole%" > nul
-   IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraWebConsole%                Status: k”r
-   IF %ERRORLEVEL% == 1 ECHO  %wsOraWebConsole%                Status: k”r ej
+   IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraWebConsole%                Status: k?r
+   IF %ERRORLEVEL% == 1 ECHO  %wsOraWebConsole%                Status: k?r ej
 NET START | FINDSTR /C:"%wsMapGuide%" > nul
-   IF NOT %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                Status: k”r
-   IF %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                Status: k”r ej
+   IF NOT %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                Status: k?r
+   IF %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                Status: k?r ej
 ECHO.
 PAUSE
 GOTO %caller%
@@ -287,14 +287,14 @@ ECHO %DATE% %TIME%
 ECHO           %wsTnslistener% startas
 NET START "%wsTnslistener%"
 ECHO %DATE% %TIME%
-ECHO           %wsTnslistener% „r startad
+ECHO           %wsTnslistener% ?r startad
 ECHO.
 ECHO.
 ECHO %DATE% %TIME%
 ECHO           %wsOraDB% startas
 NET START "%wsOraDB%"
 ECHO %DATE% %TIME%
-ECHO           %wsOraDB% „r startad
+ECHO           %wsOraDB% ?r startad
 ECHO.
 ECHO.
 ECHO.
@@ -313,14 +313,14 @@ ECHO %DATE% %TIME%
 ECHO           %wsOraDB% stoppas
 NET STOP "%wsOraDB%"
 ECHO %DATE% %TIME%
-ECHO           %wsOraDB% „r stoppad
+ECHO           %wsOraDB% ?r stoppad
 ECHO.
 ECHO.
 ECHO %DATE% %TIME%
 ECHO           %wsTnslistener% stoppas
 NET STOP "%wsTnslistener%"
 ECHO %DATE% %TIME%
-ECHO           %wsTnslistener% „r stoppad
+ECHO           %wsTnslistener% ?r stoppad
 ECHO.
 ECHO.
 ECHO.
@@ -338,7 +338,7 @@ ECHO %DATE% %TIME%
 ECHO           %wsOraWebConsole% startas
 NET START "%wsOraWebConsole%"
 ECHO %DATE% %TIME%
-ECHO           %wsOraWebConsole% „r startad
+ECHO           %wsOraWebConsole% ?r startad
 ECHO.
 PAUSE
 SET run3=%ON%
@@ -355,7 +355,7 @@ ECHO %DATE% %TIME%
 ECHO           %wsOraWebConsole% stoppas
 NET STOP "%wsOraWebConsole%"
 ECHO %DATE% %TIME%
-ECHO           %wsOraWebConsole% „r stoppad
+ECHO           %wsOraWebConsole% ?r stoppad
 ECHO.
 PAUSE
 SET run3=%OFF%
@@ -372,7 +372,7 @@ ECHO %DATE% %TIME%
 ECHO           %wsMapGuide% startas
 NET START "%wsMapGuide%"
 ECHO %DATE% %TIME%
-ECHO           %wsMapGuide% „r startad
+ECHO           %wsMapGuide% ?r startad
 ECHO.
 PAUSE
 SET run5=%ON%
@@ -388,7 +388,7 @@ ECHO %DATE% %TIME%
 ECHO           %wsMapGuide% stoppas
 NET STOP "%wsMapGuide%"
 ECHO %DATE% %TIME%
-ECHO           %wsMapGuide% „r stoppad
+ECHO           %wsMapGuide% ?r stoppad
 ECHO.
 PAUSE
 SET run5=%OFF%
@@ -400,8 +400,8 @@ GOTO :EOF
 :SQL
 CLS
 ECHO.
-SET /P sqluser=Anv„ndare: 
-SET /P sqlpass=L”sen: 
+SET /P sqluser=Anv?ndare: 
+SET /P sqlpass=L?sen: 
 CALL sqlplus %sqluser%/%sqlpass%
 ECHO %ERRORLEVEL%
 ECHO.
