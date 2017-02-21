@@ -1,8 +1,8 @@
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
 CLS
-
-:: Encode code page 437 (CP437, DOS)
+:: Sparas och k”rs i code page 437 (dos)
+CHCP 437
 
 :: Exempel p† iterering
 ::SET variabel=(value1 value2 value3 value4)
@@ -21,8 +21,8 @@ CLS
 SET v=1.4 [2013-11-03]
 ::  Flervals-alternativ av menyvalen
 ::SET v=1.3.2 [2013-10-03]
-::  Indikering av aktiv windows-tj„nst p† huvudmeny
-::  Menyval f†r status av windows-tj„nst
+::  Indikering av aktiv windows-tj„nster p† huvudmeny
+::  Menyval f”r status av windows-tj„nster
 ::SET v=1.3 [2013-10-02]
 ::SET v=1.2 [2013-04-08]
 ::SET v=1.1 [2013-03-29]
@@ -78,7 +78,7 @@ ECHO  F”r att forts„tta
 ECHO.
 PAUSE
 
-:: Kontrollera status f”r Windows-tj„nsterna och s„tt menymarkering
+:: Kontrollera status f”r Windows-tj„nsterna och s„tter menymarkering
 :MENU
 SET caller=STARTSTATUSTNS
 GOTO STATUSTNS
