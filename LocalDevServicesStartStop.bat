@@ -16,10 +16,13 @@ CHCP 437
 
 
 :: Starta och stoppa Windows tj„nster f”r Oracle-instans,
-:: MapGuide Open Source.
+:: MapGuide Open Source och PostgreSQL.
 :: Metadata
 SET v=1.5 [2019-11-28]
 ::  Tagit bort Oracle Web Console
+::  Anpassat fr†n version 2.5 till 3.1 f”r MapGuide Open Source
+::  Anpassat fr†n version 11 till 12 f”r Oracle
+::  Adderat Windows tj„nst f”r PostgreSQL
 ::SET v=1.4 [2013-11-03]
 ::  Flervals-alternativ av menyvalen
 ::SET v=1.3.2 [2013-10-03]
@@ -36,6 +39,7 @@ SET db=ADEV
 :: Tj„nster som hanteras
 SET wsTnslistener=OracleOraDB12Home1TNSListener
 SET wsOraDB=OracleServiceADEV
+SET wsPostgreSQL=postgresql-x64-12
 SET wsMapGuide=MapGuide Server 3.1
 SET statusFlagOn=Status: k”r
 SET statusFlagOff=Status: k”r ej
@@ -72,6 +76,7 @@ ECHO      * %wsTnslistener%
 ECHO      * %wsOraDB%
 ECHO.
 ECHO    ”vriga
+ECHO      * %wsPostgreSQL%
 ECHO      * %wsMapGuide%
 ECHO.
 ECHO  F”r att forts„tta
@@ -85,6 +90,11 @@ GOTO STATUSTNS
 :STARTSTATUSTNS
 SET INFO=
 
+SET caller=STARTSTATUSPSQL
+GOTO STATUSPSQL
+:STARTSTATUSPSQL
+SET INFO=
+
 SET caller=STARTSTATUSMGOS
 GOTO STATUSMGOS
 :STARTSTATUSMGOS
@@ -94,6 +104,9 @@ CLS
 ECHO.
 ECHO   1. %run1%Starta Oracle f”r instans %db%
 ECHO   2. %run2%Stoppa Oracle f”r instans %db%
+ECHO.
+ECHO   3. %run3%Starta PostgreSQL
+ECHO   4. %run4%Stoppa PostgreSQL
 ECHO.
 ECHO   5. %run5%Starta MapGuide Open Source
 ECHO   6. %run6%Stoppa MapGuide Open Source
@@ -152,6 +165,7 @@ ECHO  Status
 ECHO.
 ECHO   1. %wsTnslistener%
 ECHO   2. %wsOraDB%
+ECHO   3. %wsPostgreSQL%
 ECHO   4. %wsMapGuide%
 ECHO.
 ECHO   5. Alla, statusalternativ 1 - 4
@@ -166,6 +180,7 @@ SET /P menustatus=V„lj alternativ:
 SET caller=MENUSTATUS
 IF %menustatus%==1 GOTO STATUSTNS
 IF %menustatus%==2 GOTO STATUSDB
+IF %menustatus%==3 GOTO STATUSPSQL
 IF %menustatus%==4 GOTO STATUSMGOS
 IF %menustatus%==5 GOTO STATUSALLA
 IF %menustatus%==m GOTO MENU
@@ -210,6 +225,25 @@ ECHO.
 GOTO %caller%
 
 
+:: STATUS PostgreSQL
+:STATUSPSQL
+CLS
+ECHO.
+NET START | FINDSTR /C:"%wsPostgreSQL%" > nul
+   IF NOT %ERRORLEVEL% == 1 (
+	  SET INFO=%wsPostgreSQL%    %statusFlagOn%
+	  SET run3=%ON%
+	  SET run4=%OFF%
+   )
+   IF %ERRORLEVEL% == 1 (
+	  SET INFO=%wsPostgreSQL%    %statusFlagOff%
+	  SET run3=%OFF%
+	  SET run4=%ON%
+   )
+ECHO.
+GOTO %caller%
+
+
 :: STATUS MGOS
 :STATUSMGOS
 CLS
@@ -239,6 +273,9 @@ NET START | FINDSTR /C:"%wsTnslistener%" > nul
 NET START | FINDSTR /C:"%wsOraDB%" > nul
    IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  %statusFlagOn%
    IF %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  %statusFlagOff%
+NET START | FINDSTR /C:"%wsPostgreSQL%" > nul
+   IF NOT %ERRORLEVEL% == 1 ECHO  %wsPostgreSQL%                %statusFlagOn%
+   IF %ERRORLEVEL% == 1 ECHO  %wsPostgreSQL%                %statusFlagOff%
 NET START | FINDSTR /C:"%wsMapGuide%" > nul
    IF NOT %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                %statusFlagOn%
    IF %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                %statusFlagOff%
@@ -295,6 +332,38 @@ ECHO.
 PAUSE
 SET run1=%OFF%
 SET run2=%ON%
+::GOTO MENU
+GOTO :EOF
+
+
+:THREE
+CLS
+ECHO.
+ECHO %DATE% %TIME%
+ECHO           %wsPostgreSQL% %statusFlagRunStarts%
+NET START "%wsPostgreSQL%"
+ECHO %DATE% %TIME%
+ECHO           %wsPostgreSQL% %statusFlagRunStarted%
+ECHO.
+PAUSE
+SET run3=%ON%
+SET run4=%OFF%
+::GOTO MENU
+GOTO :EOF
+
+
+:FOUR
+CLS
+ECHO.
+ECHO %DATE% %TIME%
+ECHO           %wsPostgreSQL% %statusFlagRunStops%
+NET STOP "%wsPostgreSQL%"
+ECHO %DATE% %TIME%
+ECHO           %wsPostgreSQL% %statusFlagRunStoped%
+ECHO.
+PAUSE
+SET run3=%OFF%
+SET run4=%ON%
 ::GOTO MENU
 GOTO :EOF
 
