@@ -16,9 +16,11 @@ CHCP 437
 
 
 :: Starta och stoppa Windows tj„nster f”r Oracle-instans,
-:: webb-konsollen och MapGuide Open Source.
+:: MapGuide Open Source.
 :: Metadata
-SET v=1.4 [2013-11-03]
+SET v=1.5 [2019-11-28]
+::  Tagit bort Oracle Web Console
+::SET v=1.4 [2013-11-03]
 ::  Flervals-alternativ av menyvalen
 ::SET v=1.3.2 [2013-10-03]
 ::  Indikering av aktiv windows-tj„nster p† huvudmeny
@@ -34,7 +36,6 @@ SET db=ADEV
 :: Tj„nster som hanteras
 SET wsTnslistener=OracleOraDb11g_home1TNSListener
 SET wsOraDB=OracleServiceADEV
-SET wsOraWebConsole=OracleDBConsoleadev
 SET wsMapGuide=MapGuide Server 2.5
 SET statusFlagOn=Status: k”r
 SET statusFlagOff=Status: k”r ej
@@ -69,7 +70,6 @@ ECHO  F”ljande tj„nster hanteras:
 ECHO    f”r Oracle-instans %db%
 ECHO      * %wsTnslistener%
 ECHO      * %wsOraDB%
-ECHO      * %wsOraWebConsole%
 ECHO.
 ECHO    ”vriga
 ECHO      * %wsMapGuide%
@@ -85,11 +85,6 @@ GOTO STATUSTNS
 :STARTSTATUSTNS
 SET INFO=
 
-SET caller=STARTSTATUSCONSOLE
-GOTO STATUSCONSOLE
-:STARTSTATUSCONSOLE
-SET INFO=
-
 SET caller=STARTSTATUSMGOS
 GOTO STATUSMGOS
 :STARTSTATUSMGOS
@@ -99,9 +94,6 @@ CLS
 ECHO.
 ECHO   1. %run1%Starta Oracle f”r instans %db%
 ECHO   2. %run2%Stoppa Oracle f”r instans %db%
-ECHO.
-ECHO   3. %run3%Starta Oracle's webbaserad kontrollpanel%consoleUrl%
-ECHO   4. %run4%Stoppa Oracle's webbaserad kontrollpanel
 ECHO.
 ECHO   5. %run5%Starta MapGuide Open Source
 ECHO   6. %run6%Stoppa MapGuide Open Source
@@ -160,7 +152,6 @@ ECHO  Status
 ECHO.
 ECHO   1. %wsTnslistener%
 ECHO   2. %wsOraDB%
-ECHO   3. %wsOraWebConsole%
 ECHO   4. %wsMapGuide%
 ECHO.
 ECHO   5. Alla, statusalternativ 1 - 4
@@ -175,7 +166,6 @@ SET /P menustatus=V„lj alternativ:
 SET caller=MENUSTATUS
 IF %menustatus%==1 GOTO STATUSTNS
 IF %menustatus%==2 GOTO STATUSDB
-IF %menustatus%==3 GOTO STATUSCONSOLE
 IF %menustatus%==4 GOTO STATUSMGOS
 IF %menustatus%==5 GOTO STATUSALLA
 IF %menustatus%==m GOTO MENU
@@ -220,25 +210,6 @@ ECHO.
 GOTO %caller%
 
 
-:: STATUS CONSOLE
-:STATUSCONSOLE
-CLS
-ECHO.
-NET START | FINDSTR /C:"%wsOraWebConsole%" > nul
-   IF NOT %ERRORLEVEL% == 1 (
-	  SET INFO=%wsOraWebConsole%    %statusFlagOn%
-	  SET run3=%ON%
-	  SET run4=%OFF%
-   )
-   IF %ERRORLEVEL% == 1 (
-	  SET INFO=%wsOraWebConsole%    %statusFlagOff%
-	  SET run3=%OFF%
-	  SET run4=%ON%
-   )
-ECHO.
-GOTO %caller%
-
-
 :: STATUS MGOS
 :STATUSMGOS
 CLS
@@ -268,9 +239,6 @@ NET START | FINDSTR /C:"%wsTnslistener%" > nul
 NET START | FINDSTR /C:"%wsOraDB%" > nul
    IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  %statusFlagOn%
    IF %ERRORLEVEL% == 1 ECHO  %wsOraDB%                  %statusFlagOff%
-NET START | FINDSTR /C:"%wsOraWebConsole%" > nul
-   IF NOT %ERRORLEVEL% == 1 ECHO  %wsOraWebConsole%                %statusFlagOn%
-   IF %ERRORLEVEL% == 1 ECHO  %wsOraWebConsole%                %statusFlagOff%
 NET START | FINDSTR /C:"%wsMapGuide%" > nul
    IF NOT %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                %statusFlagOn%
    IF %ERRORLEVEL% == 1 ECHO  %wsMapGuide%                %statusFlagOff%
@@ -327,40 +295,6 @@ ECHO.
 PAUSE
 SET run1=%OFF%
 SET run2=%ON%
-::GOTO MENU
-GOTO :EOF
-
-
-:THREE
-CLS
-ECHO.
-ECHO %DATE% %TIME%
-ECHO           %wsOraWebConsole% %statusFlagRunStarts%
-NET START "%wsOraWebConsole%"
-ECHO %DATE% %TIME%
-ECHO           %wsOraWebConsole% %statusFlagRunStarted%
-ECHO.
-PAUSE
-SET run3=%ON%
-SET consoleUrl= (https://localhost:1158/em)
-SET run4=%OFF%
-::GOTO MENU
-GOTO :EOF
-
-
-:FOUR
-CLS
-ECHO.
-ECHO %DATE% %TIME%
-ECHO           %wsOraWebConsole% %statusFlagRunStops%
-NET STOP "%wsOraWebConsole%"
-ECHO %DATE% %TIME%
-ECHO           %wsOraWebConsole% %statusFlagRunStoped%
-ECHO.
-PAUSE
-SET run3=%OFF%
-SET consoleUrl=
-SET run4=%ON%
 ::GOTO MENU
 GOTO :EOF
 
