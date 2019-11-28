@@ -34,7 +34,7 @@ SET OFF=
 :: Instans
 SET db=ADEV
 :: Tj„nster som hanteras
-SET wsTnslistener=OracleOraDb11g_home1TNSListener
+SET wsTnslistener=OracleOraDB12Home1TNSListener
 SET wsOraDB=OracleServiceADEV
 SET wsMapGuide=MapGuide Server 3.1
 SET statusFlagOn=Status: k”r
